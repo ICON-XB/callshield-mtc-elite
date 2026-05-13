@@ -1,0 +1,22 @@
+# COPYRIGHT AND OWNERSHIP NOTICE
+
+**Project Name:** CallShield MTC Elite
+**Author/Owner:** [USER NAME/COMPANY NAME]
+**Date of Creation:** May 2026
+**Location:** Windhoek, Namibia
+
+## 1. Ownership of Intellectual Property
+All software code, user interface designs (UI/UX), graphics, logos, and technical logic contained within this repository (the "Software") are the exclusive property of the Author. This includes, but is not limited to:
+- The "Stitch-inspired" dark mode aesthetic.
+- The "Kernel Shield" simulation logic.
+- The community-based reporting and lookup database architecture.
+- All MTC-branded visual assets.
+
+## 2. Restrictions
+Unauthorized copying, modification, distribution, or reverse engineering of this Software is strictly prohibited. 
+
+## 3. Usage for Presentation
+This Software is provided to MTC Namibia (Mobile Telecommunications Limited) solely for the purpose of a business pitch and technical demonstration. MTC Namibia does not acquire any ownership rights or licenses to use this technology by viewing the demonstration.
+
+## 4. Legal Recourse
+Any unauthorized use or reproduction of the concepts or code found herein will be met with legal action to the fullest extent of the law in the jurisdiction of the Republic of Namibia.

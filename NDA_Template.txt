@@ -1,0 +1,36 @@
+NON-DISCLOSURE AGREEMENT (NDA)
+
+THIS AGREEMENT is made and entered into this _____ day of May, 2026, by and between:
+
+DISCLOSING PARTY: [YOUR NAME / COMPANY NAME]
+RECEIVING PARTY: Mobile Telecommunications Limited (MTC Namibia)
+
+1. PURPOSE
+The Disclosing Party has developed a mobile application and security infrastructure known as "CallShield MTC Elite" (the "Information"). The Disclosing Party wishes to disclose this Information to the Receiving Party for the sole purpose of evaluating a potential business partnership or acquisition.
+
+2. CONFIDENTIAL INFORMATION
+"Confidential Information" shall include all data, software code, user interface designs, simulation logic (specifically the Kernel Shield and AI filtering mechanisms), business plans, and technical documentation related to CallShield MTC Elite.
+
+3. NON-DISCLOSURE OBLIGATIONS
+The Receiving Party agree:
+(a) To hold the Confidential Information in strict confidence.
+(b) To use the Information only for the Purpose stated in Section 1.
+(c) Not to copy, reverse engineer, or reproduce any part of the Software without express written consent.
+(d) Not to develop a competing product using the unique logic or designs disclosed during the presentation.
+
+4. EXCLUSIONS
+Confidential Information does not include information that is already in the public domain or was already known to the Receiving Party before the disclosure.
+
+5. TERM
+The obligations of confidentiality shall survive for a period of [e.g., 3 years] from the date of disclosure.
+
+6. GOVERNING LAW
+This Agreement shall be governed by and construed in accordance with the laws of the Republic of Namibia.
+
+IN WITNESS WHEREOF, the parties have executed this Agreement as of the date first above written.
+
+DISCLOSING PARTY:                            RECEIVING PARTY:
+
+__________________________                   __________________________
+[YOUR NAME]                                  [MTC REPRESENTATIVE]
+Date:                                        Date:
