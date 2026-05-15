@@ -1,10 +1,10 @@
 # Proprietary License - CallShield MTC Elite
 
-Copyright (c) 2026 [USER NAME]. All rights reserved.
+Copyright (c) 2026 DEON ICON KAYELE. All rights reserved.
 
 ## PROPRIETARY AND CONFIDENTIAL
 
-This software and all associated files are the exclusive property of [USER NAME]. 
+This software and all associated files are the exclusive property of DEON ICON KAYELE. 
 
 ### 1. NO LICENSE GRANTED
 No license is granted for any use, including but not limited to reproduction, distribution, performance, or display of the source code or binary files.
