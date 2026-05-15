@@ -2,7 +2,7 @@ NON-DISCLOSURE AGREEMENT (NDA)
 
 THIS AGREEMENT is made and entered into this _____ day of May, 2026, by and between:
 
-DISCLOSING PARTY: [YOUR NAME / COMPANY NAME]
+DISCLOSING PARTY: DEON ICON KAYELE
 RECEIVING PARTY: Mobile Telecommunications Limited (MTC Namibia)
 
 1. PURPOSE
@@ -12,7 +12,7 @@ The Disclosing Party has developed a mobile application and security infrastruct
 "Confidential Information" shall include all data, software code, user interface designs, simulation logic (specifically the Kernel Shield and AI filtering mechanisms), business plans, and technical documentation related to CallShield MTC Elite.
 
 3. NON-DISCLOSURE OBLIGATIONS
-The Receiving Party agree:
+The Receiving Party agrees:
 (a) To hold the Confidential Information in strict confidence.
 (b) To use the Information only for the Purpose stated in Section 1.
 (c) Not to copy, reverse engineer, or reproduce any part of the Software without express written consent.
@@ -32,5 +32,5 @@ IN WITNESS WHEREOF, the parties have executed this Agreement as of the date firs
 DISCLOSING PARTY:                            RECEIVING PARTY:
 
 __________________________                   __________________________
-[YOUR NAME]                                  [MTC REPRESENTATIVE]
+DEON ICON KAYELE                             MTC Board Of Directors/ShareHolders
 Date:                                        Date:
