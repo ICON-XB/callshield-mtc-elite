@@ -131,90 +131,99 @@ class AlertsScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: MTCTheme.surfaceGray,
         borderRadius: BorderRadius.circular(20),
-        border: Border(left: BorderSide(color: color, width: 4), top: const BorderSide(color: Colors.white12), bottom: const BorderSide(color: Colors.white12), right: const BorderSide(color: Colors.white12)),
+        border: Border.all(color: Colors.white12), // Uniform border
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Stack(
+        children: [
+          // Accent Side
+          Positioned(
+            left: 0, top: 0, bottom: 0,
+            child: Container(width: 4, color: color),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                          color: color.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Icon(icon, color: color, size: 20),
-                    ),
-                    const SizedBox(width: 15),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(title,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 14)),
-                        Text(tag,
-                            style: GoogleFonts.spaceGrotesk(
-                                fontSize: 8,
-                                color: color,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 2)),
-                      ],
-                    ),
-                  ],
-                ),
-                Text(time,
-                    style: GoogleFonts.spaceGrotesk(
-                        fontSize: 10, color: Colors.white24)),
-              ],
-            ),
-            const SizedBox(height: 15),
-            if (hasProgress) ...[
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                    color: Colors.black26,
-                    borderRadius: BorderRadius.circular(10)),
-                child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('UPTIME STATUS',
-                              style: TextStyle(
-                                  fontSize: 8, color: Colors.white24)),
-                          Text('92.4%',
-                              style: TextStyle(
-                                  fontSize: 8, color: MTCTheme.alertRed))
-                        ]),
-                    SizedBox(height: 8),
-                    LinearProgressIndicator(
-                        value: 0.92,
-                        backgroundColor: Colors.white10,
-                        color: MTCTheme.alertRed,
-                        minHeight: 4),
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                              color: color.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Icon(icon, color: color, size: 20),
+                        ),
+                        const SizedBox(width: 15),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(title,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 14)),
+                            Text(tag,
+                                style: GoogleFonts.spaceGrotesk(
+                                    fontSize: 8,
+                                    color: color,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 2)),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Text(time,
+                        style: GoogleFonts.spaceGrotesk(
+                            fontSize: 10, color: Colors.white24)),
                   ],
                 ),
-              ),
-              const SizedBox(height: 15),
-            ],
-            Text(desc,
-                style: const TextStyle(
-                    color: Colors.white54, fontSize: 12, height: 1.5)),
-            const SizedBox(height: 15),
-            Row(
-              children: [
-                Expanded(child: _miniButton('DISMISS', Colors.white24)),
-                const SizedBox(width: 10),
-                Expanded(child: _miniButton('INVESTIGATE', color)),
+                const SizedBox(height: 15),
+                if (hasProgress) ...[
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                        color: Colors.black26,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: const Column(
+                      children: [
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('UPTIME STATUS',
+                                  style: TextStyle(
+                                      fontSize: 8, color: Colors.white24)),
+                              Text('92.4%',
+                                  style: TextStyle(
+                                      fontSize: 8, color: MTCTheme.alertRed))
+                            ]),
+                        SizedBox(height: 8),
+                        LinearProgressIndicator(
+                            value: 0.92,
+                            backgroundColor: Colors.white10,
+                            color: MTCTheme.alertRed,
+                            minHeight: 4),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+                ],
+                Text(desc,
+                    style: const TextStyle(
+                        color: Colors.white54, fontSize: 12, height: 1.5)),
+                const SizedBox(height: 15),
+                Row(
+                  children: [
+                    Expanded(child: _miniButton('DISMISS', Colors.white24)),
+                    const SizedBox(width: 10),
+                    Expanded(child: _miniButton('INVESTIGATE', color)),
+                  ],
+                ),
               ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

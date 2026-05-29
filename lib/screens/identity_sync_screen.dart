@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../core/theme/app_theme.dart';
+import 'otp_verification_screen.dart';
+
 
 class IdentitySyncScreen extends StatefulWidget {
   final VoidCallback onSyncComplete;
@@ -53,7 +55,15 @@ class _IdentitySyncScreenState extends State<IdentitySyncScreen> {
     await Future.delayed(3.seconds); 
     
     if (mounted) {
-      widget.onSyncComplete();
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => OtpVerificationScreen(
+            phoneNumber: _phoneController.text,
+            onSyncComplete: widget.onSyncComplete,
+          ),
+        ),
+      );
     }
   }
 
@@ -139,7 +149,7 @@ class _IdentitySyncScreenState extends State<IdentitySyncScreen> {
               side: const BorderSide(color: Colors.white54),
               onChanged: (v) => setState(() => _consentGiven = v ?? false),
             ),
-            Expanded(
+            const Expanded(
               child: Text(
                 'I consent to the processing of my data in accordance with the Namibian Data Protection Act and POPIA guidelines.',
                 style: TextStyle(fontSize: 10, color: MTCTheme.textSecondary),

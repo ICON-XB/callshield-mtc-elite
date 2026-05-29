@@ -1,6 +1,7 @@
-import '../models/lookup_result.dart';
-import '../models/risk_level.dart';
-import '../database/database_helper.dart';
+import 'package:flutter/foundation.dart';
+import '../models/caller/lookup_result.dart';
+import '../models/caller/risk_level.dart';
+import '../database/local/database_helper.dart';
 
 /// MTC Question: "Where does the caller ID data come from?"
 /// Answer: Three data sources:
@@ -16,7 +17,6 @@ import '../database/database_helper.dart';
 /// Answer: Emergency numbers (10111, 10177, 211, etc.) are hardcoded as SAFE
 ///         and can NEVER be blocked by the kernel shield.
 class NumberLookupRepository {
-
   // ─── Namibian Network Prefix Map ───
   static const Map<String, String> _networkPrefixes = {
     '081': 'MTC',
@@ -67,7 +67,10 @@ class NumberLookupRepository {
     // Healthcare
     '0612709111': {'name': 'Windhoek Central Hospital', 'category': 'health'},
     '0612857000': {'name': 'Lady Pohamba Hospital', 'category': 'health'},
-    '0642054000': {'name': 'Welwitschia Hospital (Coast)', 'category': 'health'},
+    '0642054000': {
+      'name': 'Welwitschia Hospital (Coast)',
+      'category': 'health'
+    },
 
     // Known Users (demo)
     '0814762464': {'name': 'Deon Kayele', 'category': 'personal'},
@@ -84,28 +87,31 @@ class NumberLookupRepository {
   //   - Masked/spoofed caller IDs
   //   - Numbers with high community report density
   static const List<String> _scamPrefixes = [
-    '0900',  // Premium-rate
-    '0800',  // Toll-free often spoofed
-    '+234',  // Nigerian prefix (common scam origin)
-    '+233',  // Ghanaian prefix
-    '+44',   // UK spoofed calls
+    '0900', // Premium-rate
+    '0800', // Toll-free often spoofed
+    '+234', // Nigerian prefix (common scam origin)
+    '+233', // Ghanaian prefix
+    '+44', // UK spoofed calls
   ];
 
   String _detectNetwork(String phone) {
     final cleaned = phone.replaceAll(RegExp(r'[^0-9]'), '');
     if (cleaned.length >= 3) {
       final prefix = cleaned.substring(0, 3);
-      if (_networkPrefixes.containsKey(prefix)) return _networkPrefixes[prefix]!;
+      if (_networkPrefixes.containsKey(prefix)) {
+        return _networkPrefixes[prefix]!;
+      }
     }
     if (cleaned.length >= 2) {
       final prefix = cleaned.substring(0, 2);
-      if (_networkPrefixes.containsKey(prefix)) return _networkPrefixes[prefix]!;
+      if (_networkPrefixes.containsKey(prefix)) {
+        return _networkPrefixes[prefix]!;
+      }
     }
     if (phone.startsWith('+264')) return 'Namibian International';
     if (phone.startsWith('+')) return 'International';
     return 'Unknown Network';
   }
-
 
   Future<LookupResult> identifyNumber(String phone) async {
     // Simulate network latency (in production: MTC API call)
@@ -144,7 +150,7 @@ class NumberLookupRepository {
     try {
       reportCount = await DatabaseHelper.instance.getReportCount(cleaned);
     } catch (e) {
-      print('Community report DB check failed: $e');
+      debugPrint('Community report DB check failed: $e');
       // If DB fails (like on Windows without ffi), just assume 0 reports.
     }
 
@@ -171,7 +177,8 @@ class NumberLookupRepository {
     return LookupResult(
       phoneNumber: phone,
       name: 'Unknown number possible scam',
-      riskLevel: RiskLevel.suspicious, // Elevate from lowRisk to suspicious per user request
+      riskLevel: RiskLevel
+          .suspicious, // Elevate from lowRisk to suspicious per user request
       isRegistered: false,
       network: network,
     );

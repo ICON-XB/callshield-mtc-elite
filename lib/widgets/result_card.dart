@@ -32,9 +32,9 @@ class ResultCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: MTCTheme.primaryBlue.withAlpha(40),
+              color: MTCTheme.primaryBlue.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(30),
-              border: Border.all(color: MTCTheme.primaryBlue.withAlpha(80)),
+              border: Border.all(color: MTCTheme.primaryBlue.withValues(alpha: 0.31)),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -93,7 +93,7 @@ class ResultCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.security_rounded, color: MTCTheme.textSecondary, size: 14),
+              const Icon(Icons.security_rounded, color: MTCTheme.textSecondary, size: 14),
               const SizedBox(width: 8),
               Text(
                 'MTC National Database Verified', 

@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/lookup_result.dart';
-import '../models/risk_level.dart';
+import '../models/caller/lookup_result.dart';
+import '../models/caller/risk_level.dart';
 import '../repositories/lookup_repository.dart';
-import '../database/database_helper.dart';
+import '../database/local/database_helper.dart';
 
 final lookupRepositoryProvider = Provider((ref) => NumberLookupRepository());
 
@@ -48,7 +48,7 @@ class LookupNotifier extends StateNotifier<LookupState> {
     state = state.copyWith(isLoading: true);
     try {
       final result = await _repository.identifyNumber(phone);
-      final lookups = [result, ...state.lookups];
+      final List<LookupResult> lookups = [result, ...state.lookups];
       state = state.copyWith(
         isLoading: false,
         lastResult: result,
@@ -57,10 +57,9 @@ class LookupNotifier extends StateNotifier<LookupState> {
       try {
         await DatabaseHelper.instance.addToHistory(result.toMap());
       } catch (e) {
-        print('History save failed: $e');
+        // Silently fail history save
       }
     } catch (e) {
-      print('Lookup failed: $e');
       state = state.copyWith(isLoading: false);
     }
   }
@@ -70,7 +69,8 @@ class LookupNotifier extends StateNotifier<LookupState> {
   }
 }
 
-final lookupProvider = StateNotifierProvider<LookupNotifier, LookupState>((ref) {
+final lookupProvider =
+    StateNotifierProvider<LookupNotifier, LookupState>((ref) {
   final repo = ref.watch(lookupRepositoryProvider);
   return LookupNotifier(repo);
 });
@@ -100,6 +100,7 @@ class CurrentCallNotifier extends StateNotifier<CurrentCallState> {
   }
 }
 
-final currentCallProvider = StateNotifierProvider<CurrentCallNotifier, CurrentCallState>((ref) {
+final currentCallProvider =
+    StateNotifierProvider<CurrentCallNotifier, CurrentCallState>((ref) {
   return CurrentCallNotifier();
 });

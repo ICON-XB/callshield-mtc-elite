@@ -1,33 +1,92 @@
 package com.example.callshield
 
-import android.content.Context
 import android.telecom.Call
 import android.telecom.CallScreeningService
 import android.util.Log
+import io.flutter.plugin.common.MethodChannel
 
 class ShieldCallScreeningService : CallScreeningService() {
+    private val tag = "CallShield"
+
     override fun onScreenCall(callDetails: Call.Details) {
         val phoneNumber = callDetails.handle.schemeSpecificPart
-        Log.d("CallShield", "Screening incoming call: $phoneNumber")
+        Log.d(tag, "Screening incoming call: $phoneNumber")
 
-        // Logic to check against MTC Blacklist
-        // For simulation, we block any number starting with '0800'
-        val isScam = phoneNumber.startsWith("0800")
-
-        val response = CallResponse.Builder()
-        if (isScam) {
-            Log.d("CallShield", "SCAM DETECTED! Blocking: $phoneNumber")
-            response.setDisallowCall(true)
-            response.setRejectCall(true)
-            response.setSkipCallLog(false)
-            response.setSkipNotification(true)
-        } else {
-            response.setDisallowCall(false)
-            response.setRejectCall(false)
-            response.setSkipCallLog(false)
-            response.setSkipNotification(false)
+        if (phoneNumber.isNullOrBlank()) {
+            respondToCall(callDetails, allowResponse())
+            return
         }
 
-        respondToCall(callDetails, response.build())
+        if (!CallShieldNativeBridge.isShieldActive(this)) {
+            respondToCall(callDetails, allowResponse())
+            return
+        }
+
+        if (CallShieldNativeBridge.isBlockedNumber(this, phoneNumber)) {
+            respondToCall(callDetails, blockResponse("Blocked by native blacklist"))
+            return
+        }
+
+        val engine = CallShieldNativeBridge.getCachedEngine()
+        if (engine == null) {
+            Log.w(tag, "Flutter engine not available, allowing call")
+            respondToCall(callDetails, allowResponse())
+            return
+        }
+
+        val channel = MethodChannel(
+            engine.dartExecutor.binaryMessenger,
+            CallShieldNativeBridge.CALL_EVENTS_CHANNEL,
+        )
+
+        channel.invokeMethod(
+            "incomingCall",
+            mapOf(
+                "phone" to phoneNumber,
+                "callerName" to null,
+            ),
+            object : MethodChannel.Result {
+                override fun success(result: Any?) {
+                    val decision = result as? Map<*, *> ?: emptyMap<Any?, Any?>()
+                    val shouldBlock = decision["shouldBlock"] as? Boolean ?: false
+                    val reason = decision["reason"] as? String ?: "Flutter decision"
+
+                    if (shouldBlock) {
+                        respondToCall(callDetails, blockResponse(reason))
+                    } else {
+                        respondToCall(callDetails, allowResponse())
+                    }
+                }
+
+                override fun error(errorCode: String, errorMessage: String?, errorDetails: Any?) {
+                    Log.e(tag, "Flutter call screening error: $errorCode $errorMessage")
+                    respondToCall(callDetails, allowResponse())
+                }
+
+                override fun notImplemented() {
+                    Log.w(tag, "Flutter call screening not implemented")
+                    respondToCall(callDetails, allowResponse())
+                }
+            },
+        )
+    }
+
+    private fun blockResponse(reason: String): CallResponse {
+        Log.d(tag, "Blocking incoming call: $reason")
+        return CallResponse.Builder()
+            .setDisallowCall(true)
+            .setRejectCall(true)
+            .setSkipCallLog(false)
+            .setSkipNotification(true)
+            .build()
+    }
+
+    private fun allowResponse(): CallResponse {
+        return CallResponse.Builder()
+            .setDisallowCall(false)
+            .setRejectCall(false)
+            .setSkipCallLog(false)
+            .setSkipNotification(false)
+            .build()
     }
 }

@@ -55,7 +55,7 @@ class MTCTheme {
       cardTheme: CardThemeData(
         color: surfaceGray,
         elevation: 4,
-        shadowColor: Colors.black.withAlpha(50),
+        shadowColor: Colors.black.withValues(alpha: 0.2),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(

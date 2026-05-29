@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../core/theme/app_theme.dart';
-import '../providers/lookup_provider.dart';
-import '../widgets/result_card.dart';
+import '../providers/caller/lookup_provider.dart';
+import '../widgets/cards/result_card.dart';
 
 class LookupScreen extends ConsumerStatefulWidget {
-  const LookupScreen({Key? key}) : super(key: key);
+  const LookupScreen({super.key});
 
   @override
   ConsumerState<LookupScreen> createState() => _LookupScreenState();
@@ -33,7 +33,10 @@ class _LookupScreenState extends ConsumerState<LookupScreen> {
             _buildBigSearch(),
             const SizedBox(height: 30),
             if (lookupState.isLoading)
-              const Center(child: Padding(padding: EdgeInsets.all(40), child: CircularProgressIndicator()))
+              const Center(
+                  child: Padding(
+                      padding: EdgeInsets.all(40),
+                      child: CircularProgressIndicator()))
             else if (lookupState.lastResult != null)
               _buildCleanResult(lookupState)
             else
@@ -56,14 +59,17 @@ class _LookupScreenState extends ConsumerState<LookupScreen> {
         controller: _controller,
         style: GoogleFonts.outfit(fontSize: 18, color: Colors.white),
         onSubmitted: (val) {
-          if (val.isNotEmpty) ref.read(lookupProvider.notifier).lookupNumber(val);
+          if (val.isNotEmpty) {
+            ref.read(lookupProvider.notifier).lookupNumber(val);
+          }
         },
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
           hintText: 'Enter phone number...',
-          hintStyle: const TextStyle(color: Colors.white30),
-          prefixIcon: const Icon(Icons.search_rounded, color: MTCTheme.primaryBlue, size: 28),
+          hintStyle: TextStyle(color: Colors.white30),
+          prefixIcon:
+              Icon(Icons.search_rounded, color: MTCTheme.primaryBlue, size: 28),
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(vertical: 22, horizontal: 20),
+          contentPadding: EdgeInsets.symmetric(vertical: 22, horizontal: 20),
         ),
       ),
     );
@@ -76,8 +82,17 @@ class _LookupScreenState extends ConsumerState<LookupScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('SEARCH RESULT', style: GoogleFonts.outfit(fontSize: 12, fontWeight: FontWeight.bold, color: MTCTheme.textSecondary, letterSpacing: 1)),
-            TextButton(onPressed: () => ref.read(lookupProvider.notifier).clearResult(), child: const Text('Clear', style: TextStyle(color: MTCTheme.primaryBlue))),
+            Text('SEARCH RESULT',
+                style: GoogleFonts.outfit(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: MTCTheme.textSecondary,
+                    letterSpacing: 1)),
+            TextButton(
+                onPressed: () =>
+                    ref.read(lookupProvider.notifier).clearResult(),
+                child: const Text('Clear',
+                    style: TextStyle(color: MTCTheme.primaryBlue))),
           ],
         ),
         const SizedBox(height: 15),
@@ -97,9 +112,14 @@ class _LookupScreenState extends ConsumerState<LookupScreen> {
         child: Column(
           children: [
             const SizedBox(height: 60),
-            const Icon(Icons.search_off_rounded, size: 80, color: Colors.white12),
+            const Icon(Icons.search_off_rounded,
+                size: 80, color: Colors.white12),
             const SizedBox(height: 20),
-            Text('No history yet', style: GoogleFonts.outfit(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white54)),
+            Text('No history yet',
+                style: GoogleFonts.outfit(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white54)),
           ],
         ),
       );
@@ -108,7 +128,12 @@ class _LookupScreenState extends ConsumerState<LookupScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('YOUR SEARCH HISTORY', style: GoogleFonts.outfit(fontSize: 12, fontWeight: FontWeight.bold, color: MTCTheme.textSecondary, letterSpacing: 1)),
+        Text('YOUR SEARCH HISTORY',
+            style: GoogleFonts.outfit(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: MTCTheme.textSecondary,
+                letterSpacing: 1)),
         const SizedBox(height: 15),
         ListView.builder(
           shrinkWrap: true,
@@ -118,16 +143,26 @@ class _LookupScreenState extends ConsumerState<LookupScreen> {
             final l = state.lookups[index];
             return Container(
               margin: const EdgeInsets.only(bottom: 12),
-              decoration: BoxDecoration(color: MTCTheme.surfaceGray, borderRadius: BorderRadius.circular(16), border: Border.all(color: Colors.white12)),
+              decoration: BoxDecoration(
+                  color: MTCTheme.surfaceGray,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.white12)),
               child: ListTile(
                 leading: CircleAvatar(
                   backgroundColor: l.riskLevel.color.withValues(alpha: 0.1),
-                  child: Icon(l.riskLevel.icon, color: l.riskLevel.color, size: 20),
+                  child: Icon(l.riskLevel.icon,
+                      color: l.riskLevel.color, size: 20),
                 ),
-                title: Text(l.phoneNumber, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-                subtitle: Text(l.network, style: const TextStyle(color: Colors.white70)),
-                trailing: const Icon(Icons.chevron_right_rounded, color: Colors.white30),
-                onTap: () => ref.read(lookupProvider.notifier).lookupNumber(l.phoneNumber),
+                title: Text(l.phoneNumber,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white)),
+                subtitle: Text(l.network,
+                    style: const TextStyle(color: Colors.white70)),
+                trailing: const Icon(Icons.chevron_right_rounded,
+                    color: Colors.white30),
+                onTap: () => ref
+                    .read(lookupProvider.notifier)
+                    .lookupNumber(l.phoneNumber),
               ),
             );
           },

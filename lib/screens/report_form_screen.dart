@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../core/theme/app_theme.dart';
-import '../database/database_helper.dart';
+import '../database/local/database_helper.dart';
 
 class ReportFormScreen extends StatefulWidget {
   const ReportFormScreen({super.key});
@@ -21,7 +21,8 @@ class _ReportFormScreenState extends State<ReportFormScreen> {
   Future<void> _submitReport() async {
     final phone = _phoneController.text.trim();
     if (phone.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please enter a phone number')));
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please enter a phone number')));
       return;
     }
 
@@ -31,7 +32,7 @@ class _ReportFormScreenState extends State<ReportFormScreen> {
     try {
       await DatabaseHelper.instance.addReport(phone, _selectedCategory);
     } catch (e) {
-      print('Report save failed: $e');
+      debugPrint('Report save failed: $e');
     }
 
     // Simulate API delay
@@ -39,12 +40,10 @@ class _ReportFormScreenState extends State<ReportFormScreen> {
 
     if (mounted) {
       setState(() => _isSubmitting = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Report verified and added to MTC National Database.'),
-          backgroundColor: MTCTheme.safeGreen,
-        )
-      );
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Report verified and added to MTC National Database.'),
+        backgroundColor: MTCTheme.safeGreen,
+      ));
       Navigator.pop(context);
     }
   }
@@ -64,7 +63,8 @@ class _ReportFormScreenState extends State<ReportFormScreen> {
             _buildInstructionText(),
             const SizedBox(height: 30),
             _buildInputLabel('SCAMMER NUMBER'),
-            _buildModernField('e.g. 081 234 5678', Icons.phone, _phoneController),
+            _buildModernField(
+                'e.g. 081 234 5678', Icons.phone, _phoneController),
             const SizedBox(height: 25),
             _buildInputLabel('THREAT CATEGORY'),
             _buildCategoryGrid(),
@@ -84,15 +84,19 @@ class _ReportFormScreenState extends State<ReportFormScreen> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: MTCTheme.primaryBlue.withAlpha(20), 
-        borderRadius: BorderRadius.circular(15), 
-        border: Border.all(color: MTCTheme.primaryBlue.withAlpha(50))
-      ),
+          color: MTCTheme.primaryBlue.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(15),
+          border:
+              Border.all(color: MTCTheme.primaryBlue.withValues(alpha: 0.2))),
       child: Row(
         children: [
           const Icon(Icons.info_outline, color: MTCTheme.primaryBlue),
           const SizedBox(width: 15),
-          Expanded(child: Text('Community reports power the CallShield engine. By reporting scams, you protect all Namibians.', style: GoogleFonts.outfit(fontSize: 13, color: MTCTheme.primaryBlue))),
+          Expanded(
+              child: Text(
+                  'Community reports power the CallShield engine. By reporting scams, you protect all Namibians.',
+                  style: GoogleFonts.outfit(
+                      fontSize: 13, color: MTCTheme.primaryBlue))),
         ],
       ),
     );
@@ -101,16 +105,24 @@ class _ReportFormScreenState extends State<ReportFormScreen> {
   Widget _buildInputLabel(String label) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10, left: 5),
-      child: Text(label, style: GoogleFonts.outfit(fontSize: 11, fontWeight: FontWeight.bold, color: MTCTheme.textSecondary, letterSpacing: 1.5)),
+      child: Text(label,
+          style: GoogleFonts.outfit(
+              fontSize: 11,
+              fontWeight: FontWeight.bold,
+              color: MTCTheme.textSecondary,
+              letterSpacing: 1.5)),
     );
   }
 
-  Widget _buildModernField(String hint, IconData icon, TextEditingController controller) {
+  Widget _buildModernField(
+      String hint, IconData icon, TextEditingController controller) {
     return Container(
       decoration: BoxDecoration(
         color: MTCTheme.surfaceGray,
         borderRadius: BorderRadius.circular(15),
-        boxShadow: [BoxShadow(color: Colors.black.withAlpha(50), blurRadius: 10)],
+        boxShadow: [
+          BoxShadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: 10)
+        ],
         border: Border.all(color: Colors.white12),
       ),
       child: TextField(
@@ -121,7 +133,9 @@ class _ReportFormScreenState extends State<ReportFormScreen> {
           hintText: hint,
           hintStyle: const TextStyle(color: Colors.white24),
           prefixIcon: Icon(icon, color: MTCTheme.primaryBlue),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
+          border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15),
+              borderSide: BorderSide.none),
           contentPadding: const EdgeInsets.symmetric(vertical: 20),
         ),
       ),
@@ -139,11 +153,15 @@ class _ReportFormScreenState extends State<ReportFormScreen> {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
-              color: isSelected ? MTCTheme.primaryBlue : MTCTheme.surfaceGray, 
-              borderRadius: BorderRadius.circular(10), 
-              border: Border.all(color: isSelected ? MTCTheme.primaryBlue : Colors.white12)
-            ),
-            child: Text(c, style: GoogleFonts.outfit(fontSize: 12, fontWeight: FontWeight.bold, color: isSelected ? Colors.white : MTCTheme.textSecondary)),
+                color: isSelected ? MTCTheme.primaryBlue : MTCTheme.surfaceGray,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                    color: isSelected ? MTCTheme.primaryBlue : Colors.white12)),
+            child: Text(c,
+                style: GoogleFonts.outfit(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: isSelected ? Colors.white : MTCTheme.textSecondary)),
           ),
         );
       }).toList(),
@@ -154,15 +172,18 @@ class _ReportFormScreenState extends State<ReportFormScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       decoration: BoxDecoration(
-        color: MTCTheme.surfaceGray, 
+        color: MTCTheme.surfaceGray,
         borderRadius: BorderRadius.circular(15),
-        boxShadow: [BoxShadow(color: Colors.black.withAlpha(50), blurRadius: 10)],
+        boxShadow: [
+          BoxShadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: 10)
+        ],
         border: Border.all(color: Colors.white12),
       ),
       child: Slider(
         value: _severity,
         onChanged: (v) => setState(() => _severity = v),
-        activeColor: _severity > 0.7 ? MTCTheme.alertRed : MTCTheme.warningAmber,
+        activeColor:
+            _severity > 0.7 ? MTCTheme.alertRed : MTCTheme.warningAmber,
         inactiveColor: Colors.white12,
       ),
     );
@@ -172,13 +193,17 @@ class _ReportFormScreenState extends State<ReportFormScreen> {
     return ElevatedButton(
       onPressed: _isSubmitting ? null : _submitReport,
       style: ElevatedButton.styleFrom(
-        backgroundColor: MTCTheme.primaryBlue, 
-        minimumSize: const Size(double.infinity, 60), 
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))
-      ),
-      child: _isSubmitting 
-        ? const CircularProgressIndicator(color: Colors.white)
-        : const Text('SUBMIT REPORT', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.5, color: Colors.white)),
+          backgroundColor: MTCTheme.primaryBlue,
+          minimumSize: const Size(double.infinity, 60),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
+      child: _isSubmitting
+          ? const CircularProgressIndicator(color: Colors.white)
+          : const Text('SUBMIT REPORT',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.5,
+                  color: Colors.white)),
     );
   }
 }

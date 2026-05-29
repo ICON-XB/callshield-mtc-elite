@@ -87,12 +87,20 @@ class AnalyticsScreen extends StatelessWidget {
       width: 40, height: 80 * h,
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
-        border: Border(top: BorderSide(color: color.withValues(alpha: 0.5), width: 2)),
         borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
       ),
-      child: Align(
-        alignment: Alignment.bottomCenter,
-        child: Container(color: color.withValues(alpha: 0.2), height: 40 * h),
+      child: Stack(
+        children: [
+          // Accent Border Simulation
+          Positioned(
+            top: 0, left: 0, right: 0,
+            child: Container(height: 2, color: color.withValues(alpha: 0.5)),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(color: color.withValues(alpha: 0.2), height: 40 * h),
+          ),
+        ],
       ),
     ).animate().scaleY(begin: 0, duration: 1.seconds, curve: Curves.easeOut);
   }
@@ -211,25 +219,37 @@ class AnalyticsScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: MTCTheme.surfaceGray,
         borderRadius: BorderRadius.circular(15),
-        border: Border(left: BorderSide(color: color, width: 2), top: const BorderSide(color: Colors.white12), bottom: const BorderSide(color: Colors.white12), right: const BorderSide(color: Colors.white12)),
+        border: Border.all(color: Colors.white12), // Use uniform border
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Stack(
         children: [
-          Row(
-            children: [
-              Icon(icon, color: color, size: 18),
-              const SizedBox(width: 15),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-                  Text(sub, style: const TextStyle(fontSize: 10, color: Colors.white24)),
-                ],
-              ),
-            ],
+          // Accent Side
+          Positioned(
+            left: 0, top: 0, bottom: 0,
+            child: Container(width: 2, color: color),
           ),
-          Text(time, style: GoogleFonts.spaceGrotesk(fontSize: 9, color: MTCTheme.mtcBlue)),
+          Padding(
+            padding: const EdgeInsets.all(15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Icon(icon, color: color, size: 18),
+                    const SizedBox(width: 15),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                        Text(sub, style: const TextStyle(fontSize: 10, color: Colors.white24)),
+                      ],
+                    ),
+                  ],
+                ),
+                Text(time, style: GoogleFonts.spaceGrotesk(fontSize: 9, color: MTCTheme.mtcBlue)),
+              ],
+            ),
+          ),
         ],
       ),
     );

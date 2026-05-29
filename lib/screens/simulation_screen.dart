@@ -2,18 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../core/theme/app_theme.dart';
-import '../models/lookup_result.dart';
-import '../providers/lookup_provider.dart';
+import '../models/caller/lookup_result.dart';
+import '../providers/caller/lookup_provider.dart';
 
 class SimulationScreen extends ConsumerStatefulWidget {
-  const SimulationScreen({Key? key}) : super(key: key);
+  const SimulationScreen({super.key});
 
   @override
   ConsumerState<SimulationScreen> createState() => _SimulationScreenState();
 }
 
 class _SimulationScreenState extends ConsumerState<SimulationScreen> {
-  final TextEditingController _testPhone = TextEditingController(text: '0817721029');
+  final TextEditingController _testPhone =
+      TextEditingController(text: '0817721029');
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +23,10 @@ class _SimulationScreenState extends ConsumerState<SimulationScreen> {
     return Scaffold(
       backgroundColor: MTCTheme.primaryNavy,
       appBar: AppBar(
-        title: Text('Test Shield', style: GoogleFonts.outfit(fontWeight: FontWeight.bold)),
-        backgroundColor: MTCTheme.primaryNavy,
+        title: Text('Test Shield',
+            style: GoogleFonts.outfit(
+                fontWeight: FontWeight.bold, color: Colors.white)),
+        backgroundColor: MTCTheme.primaryBlue,
         elevation: 0,
         foregroundColor: Colors.white,
       ),
@@ -34,13 +37,19 @@ class _SimulationScreenState extends ConsumerState<SimulationScreen> {
           children: [
             _buildInfoCard(),
             const SizedBox(height: 30),
-            Text('SIMULATE THREATS', style: GoogleFonts.outfit(fontSize: 12, fontWeight: FontWeight.bold, color: MTCTheme.textSecondary, letterSpacing: 1.5)),
+            Text('SIMULATE THREATS',
+                style: GoogleFonts.outfit(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                    letterSpacing: 1.5)),
             const SizedBox(height: 15),
             _buildTestInput(),
             const SizedBox(height: 20),
             _buildActionButtons(),
             const SizedBox(height: 30),
-            if (currentCallState.value != null) _buildActiveSimulation(currentCallState.value!),
+            if (currentCallState.value != null)
+              _buildActiveSimulation(currentCallState.value!),
           ],
         ),
       ),
@@ -51,19 +60,27 @@ class _SimulationScreenState extends ConsumerState<SimulationScreen> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: MTCTheme.surfaceGray,
+        color: MTCTheme.mtcBlue,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white12),
-        boxShadow: [BoxShadow(color: Colors.black.withAlpha(50), blurRadius: 20)],
+        boxShadow: [
+          BoxShadow(
+              color: MTCTheme.mtcBlue.withValues(alpha: 0.2), blurRadius: 20)
+        ],
       ),
       child: Column(
         children: [
-          const Icon(Icons.bolt, color: MTCTheme.accentTeal, size: 40),
+          const Icon(Icons.bolt, color: Colors.white, size: 40),
           const SizedBox(height: 15),
-          Text('Lab Mode', style: GoogleFonts.outfit(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+          Text('Lab Mode',
+              style: GoogleFonts.outfit(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold)),
           const SizedBox(height: 5),
-          const Text('Use this screen to test how CallShield handles incoming signals before deploying to the kernel.', 
-            textAlign: TextAlign.center, style: TextStyle(color: Colors.white70, fontSize: 12)),
+          const Text(
+              'Use this screen to test how CallShield handles incoming signals before deploying to the kernel.',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.white70, fontSize: 12)),
         ],
       ),
     );
@@ -71,17 +88,18 @@ class _SimulationScreenState extends ConsumerState<SimulationScreen> {
 
   Widget _buildTestInput() {
     return Container(
-      decoration: BoxDecoration(color: MTCTheme.surfaceGray, borderRadius: BorderRadius.circular(15), border: Border.all(color: Colors.white12)),
+      decoration: BoxDecoration(
+          color: Colors.white, borderRadius: BorderRadius.circular(15)),
       child: TextField(
         controller: _testPhone,
-        style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
           hintText: 'Enter number to test...',
-          hintStyle: const TextStyle(color: Colors.white30),
-          prefixIcon: const Icon(Icons.phone_android, color: MTCTheme.primaryBlue),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
+          prefixIcon: const Icon(Icons.phone_android, color: MTCTheme.mtcBlue),
+          border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15),
+              borderSide: BorderSide.none),
           filled: true,
-          fillColor: MTCTheme.surfaceGray,
+          fillColor: Colors.white,
         ),
       ),
     );
@@ -91,38 +109,62 @@ class _SimulationScreenState extends ConsumerState<SimulationScreen> {
     return Row(
       children: [
         Expanded(
-          child: _simButton('Test Call', Icons.call, Colors.green, () {
-            ref.read(currentCallProvider.notifier).simulateIncomingCall(_testPhone.text);
+          child: _simButton('Test Call', Icons.call, Colors.green, () async {
+            final phone = _testPhone.text.trim();
+            if (phone.isEmpty) return;
+
+            await ref
+                .read(currentCallProvider.notifier)
+                .handleIncomingCall(context, phone);
+
+            if (!mounted) return;
+
+            final currentCall = ref.read(currentCallProvider).value;
+            if (currentCall == null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                    content: Text('Call blocked by protection rules')),
+              );
+              return;
+            }
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                  content:
+                      Text('Incoming call processed: ${currentCall.name}')),
+            );
           }),
         ),
         const SizedBox(width: 15),
         Expanded(
           child: _simButton('Test SMS', Icons.message, Colors.orange, () {
             // SMS simulation logic
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Simulating SMS Threat Detection...'))
-            );
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                content: Text('Simulating SMS Threat Detection...')));
           }),
         ),
       ],
     );
   }
 
-  Widget _simButton(String label, IconData icon, Color color, VoidCallback onTap) {
+  Widget _simButton(
+      String label, IconData icon, Color color, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: MTCTheme.surfaceGray,
+          color: Colors.white,
           borderRadius: BorderRadius.circular(15),
-          border: Border.all(color: Colors.white12),
+          border: Border.all(color: color.withValues(alpha: 0.1)),
         ),
         child: Column(
           children: [
             Icon(icon, color: color, size: 32),
             const SizedBox(height: 10),
-            Text(label, style: GoogleFonts.outfit(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.white)),
+            Text(label,
+                style: GoogleFonts.outfit(
+                    fontWeight: FontWeight.bold, fontSize: 14)),
           ],
         ),
       ),
@@ -133,14 +175,20 @@ class _SimulationScreenState extends ConsumerState<SimulationScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('LIVE DETECTION', style: GoogleFonts.outfit(fontSize: 12, fontWeight: FontWeight.bold, color: MTCTheme.textSecondary, letterSpacing: 1.5)),
+        Text('LIVE DETECTION',
+            style: GoogleFonts.outfit(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey,
+                letterSpacing: 1.5)),
         const SizedBox(height: 15),
         Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             color: res.riskLevel.color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: res.riskLevel.color.withValues(alpha: 0.3)),
+            border:
+                Border.all(color: res.riskLevel.color.withValues(alpha: 0.3)),
           ),
           child: Row(
             children: [
@@ -150,15 +198,24 @@ class _SimulationScreenState extends ConsumerState<SimulationScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(res.riskLevel.displayName, style: TextStyle(color: res.riskLevel.color, fontWeight: FontWeight.bold)),
-                    Text('Detected ${res.phoneNumber} on ${res.network} network.', style: const TextStyle(fontSize: 12, color: Colors.white54)),
+                    Text(res.riskLevel.displayName,
+                        style: TextStyle(
+                            color: res.riskLevel.color,
+                            fontWeight: FontWeight.bold)),
+                    Text(
+                        'Detected ${res.phoneNumber} on ${res.network} network.',
+                        style: const TextStyle(fontSize: 12)),
                   ],
                 ),
               ),
               ElevatedButton(
-                onPressed: () => ref.read(currentCallProvider.notifier).simulateIncomingCall(''),
-                style: ElevatedButton.styleFrom(backgroundColor: res.riskLevel.color, shape: const CircleBorder()),
-                child: const Icon(Icons.close, size: 16, color: Colors.white),
+                onPressed: () => ref
+                    .read(currentCallProvider.notifier)
+                    .simulateIncomingCall(''),
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: res.riskLevel.color,
+                    shape: const CircleBorder()),
+                child: const Icon(Icons.close, size: 16),
               ),
             ],
           ),

@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../core/theme/app_theme.dart';
 
 class DialPadOverlay extends StatefulWidget {
-  const DialPadOverlay({Key? key}) : super(key: key);
+  const DialPadOverlay({super.key});
 
   @override
   State<DialPadOverlay> createState() => _DialPadOverlayState();
@@ -92,7 +92,7 @@ class _DialPadOverlayState extends State<DialPadOverlay> {
       child: Container(
         width: 70,
         height: 70,
-        decoration: BoxDecoration(color: MTCTheme.surfaceGray, shape: BoxShape.circle),
+        decoration: const BoxDecoration(color: MTCTheme.surfaceGray, shape: BoxShape.circle),
         child: Center(
           child: Text(k, style: GoogleFonts.outfit(fontSize: 28, fontWeight: FontWeight.w500)),
         ),
@@ -116,10 +116,10 @@ class _DialPadOverlayState extends State<DialPadOverlay> {
         ),
         GestureDetector(
           onTap: _removeDigit,
-          child: Container(
+          child: const SizedBox(
             width: 70,
             height: 70,
-            child: const Icon(Icons.backspace_outlined, color: Colors.grey, size: 24),
+            child: Icon(Icons.backspace_outlined, color: Colors.grey, size: 24),
           ),
         ),
       ],

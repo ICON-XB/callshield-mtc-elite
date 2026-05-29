@@ -41,7 +41,7 @@ class PremiumStatusScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: MTCTheme.surfaceGray,
         borderRadius: BorderRadius.circular(24),
-        boxShadow: [BoxShadow(color: Colors.black.withAlpha(50), blurRadius: 20)],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: 20)],
         border: Border.all(color: Colors.white12),
       ),
       child: Column(
@@ -51,7 +51,7 @@ class PremiumStatusScreen extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               gradient: const LinearGradient(colors: [MTCTheme.primaryBlue, MTCTheme.accentTeal]),
-              boxShadow: [BoxShadow(color: MTCTheme.primaryBlue.withAlpha(50), blurRadius: 30)],
+              boxShadow: [BoxShadow(color: MTCTheme.primaryBlue.withValues(alpha: 0.2), blurRadius: 30)],
             ),
             child: const Icon(Icons.star_rounded, color: Colors.white, size: 50),
           ).animate(onPlay: (c) => c.repeat(reverse: true)).scale(duration: 2.seconds, begin: const Offset(0.95, 0.95)),
@@ -109,7 +109,7 @@ class PremiumStatusScreen extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: const LinearGradient(colors: [MTCTheme.primaryBlue, Color(0xFF1E3A5F)]),
         borderRadius: BorderRadius.circular(24),
-        boxShadow: [BoxShadow(color: MTCTheme.primaryBlue.withAlpha(60), blurRadius: 20, offset: const Offset(0, 8))],
+        boxShadow: [BoxShadow(color: MTCTheme.primaryBlue.withValues(alpha: 0.23), blurRadius: 20, offset: const Offset(0, 8))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -120,7 +120,7 @@ class PremiumStatusScreen extends StatelessWidget {
               Text('BILLING METHOD', style: GoogleFonts.outfit(fontSize: 10, color: Colors.white70, fontWeight: FontWeight.bold, letterSpacing: 2)),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(color: MTCTheme.accentTeal.withAlpha(40), borderRadius: BorderRadius.circular(8)),
+                decoration: BoxDecoration(color: MTCTheme.accentTeal.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(8)),
                 child: const Text('SEAMLESS', style: TextStyle(color: MTCTheme.accentTeal, fontSize: 9, fontWeight: FontWeight.bold)),
               ),
             ],

@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../core/theme/app_theme.dart';
 
 class ContactsScreen extends StatelessWidget {
-  const ContactsScreen({Key? key}) : super(key: key);
+  const ContactsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
